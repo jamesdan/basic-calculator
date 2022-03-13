@@ -1,7 +1,14 @@
 package java;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +37,8 @@ public class calculator {
     private static int firstNumber;
     private static int secondNumber;
     private static Operator operator;
-
-    private static enum Operator {
-        ADD, SUBTRACT, MULTIPLY, DIVIDE, MODULO
-    }
-
-    private static JFormattedTextField outputBox = new JFormattedTextField();
-    private static List<JButton> buttonList = new ArrayList<>();
-
+    private static final JFormattedTextField outputBox = new JFormattedTextField();
+    private static final List<JButton> buttonList = new ArrayList<>();
 
     public static void main(String[] args) {
         initialize();
@@ -124,7 +125,7 @@ public class calculator {
     }
 
     private static JButton getButton(String label) {
-       return buttonList.stream().filter(b -> label.equals(b.getText())).findAny().orElse(null);
+        return buttonList.stream().filter(b -> label.equals(b.getText())).findAny().orElse(null);
     }
 
     private static void addButton(String label) {
@@ -134,7 +135,7 @@ public class calculator {
     private static void addButton(String label, int width, int height) {
         JButton button = createButton(label);
         button.setPreferredSize(new Dimension(width, height));
-        button.addActionListener(e -> {processClickedButton(e.getActionCommand());});
+        button.addActionListener(e -> processClickedButton(e.getActionCommand()));
         buttonList.add(button);
     }
 
@@ -146,7 +147,7 @@ public class calculator {
     }
 
     private static void processClickedButton(String label) {
-        switch(label) {
+        switch (label) {
             case BUTTON_LABEL_CLEAR:
                 outputBox.setValue("");
                 reset();
@@ -155,7 +156,7 @@ public class calculator {
                 processSecondNumber(Operator.ADD);
                 break;
             case BUTTON_LABEL_MINUS:
-                if(!ongoingCalculation && outputBox.getValue() == "") {
+                if (!ongoingCalculation && outputBox.getValue() == "") {
                     outputBox.setValue("-");
                     ongoingInput = true;
                 } else {
@@ -172,15 +173,15 @@ public class calculator {
                 processSecondNumber(Operator.MODULO);
                 break;
             case BUTTON_LABEL_EQUAL:
-                if(outputBox.getText().equals("ERROR")) return;
-                if(firstNumber < 0 || Integer.parseInt(outputBox.getText()) < 0) {
+                if (outputBox.getText().equals("ERROR")) return;
+                if (firstNumber < 0 || Integer.parseInt(outputBox.getText()) < 0) {
                     outputBox.setValue("ERROR");
                     reset();
                     break;
                 }
 
                 int result;
-                if(ongoingCalculation) {
+                if (ongoingCalculation) {
                     secondNumber = Integer.parseInt(outputBox.getText());
                     ongoingCalculation = false;
                 }
@@ -200,7 +201,7 @@ public class calculator {
             case BUTTON_LABEL_7:
             case BUTTON_LABEL_8:
             case BUTTON_LABEL_9:
-                if(ongoingInput) {
+                if (ongoingInput) {
                     outputBox.setValue(outputBox.getText() + label);
                 } else {
                     outputBox.setValue(label);
@@ -217,7 +218,7 @@ public class calculator {
     }
 
     private static void processSecondNumber(Operator operator) {
-        if(outputBox.getText().equals("ERROR")) return;
+        if (outputBox.getText().equals("ERROR")) return;
         firstNumber = Integer.parseInt(outputBox.getText());
         secondNumber = 0;
         ongoingCalculation = true;
@@ -226,7 +227,7 @@ public class calculator {
     }
 
     private static int calculate() {
-        switch(operator) {
+        switch (operator) {
             case ADD:
                 return firstNumber + secondNumber;
             case SUBTRACT:
@@ -240,5 +241,9 @@ public class calculator {
             default:
                 return 0;
         }
+    }
+
+    private enum Operator {
+        ADD, SUBTRACT, MULTIPLY, DIVIDE, MODULO
     }
 }
